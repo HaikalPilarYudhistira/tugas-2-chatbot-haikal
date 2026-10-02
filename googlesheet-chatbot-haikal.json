@@ -1,0 +1,159 @@
+{
+  "name": "googlesheet-chatbot-haikal",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hallo ada yang bisa saya bantu Haikal?\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e72e9d6a-418a-4674-9d41-bdd2c4176f9b",
+      "name": "When chat message received",
+      "webhookId": "aece9e58-5c16-4366-a1b1-3b2e2688e7ca"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Kamu adalah Customer Service Virtual untuk \"Lembaga Pelatihan Digital\".\nTugas utama kamu adalah membantu pengguna menjawab pertanyaan seputar daftar program pelatihan, deskripsi topik, dan biaya/harga pelatihan.\n\nPENTING:\n- Kamu MEMILIKI akses ke Tool Google Sheets \"Get row(s) in sheet in Google Sheets\".\n- Setiap kali pengguna menanyakan tentang produk pelatihan, topik, atau harga, kamu HARUS menggunakan Tool Google Sheets tersebut untuk mencari data terbaru dari spreadsheet \"TUGAS 2\".\n- Jawablah pertanyaan pengguna dengan sopan, akurat, dan ringkas berdasarkan data dari Google Sheets."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "d49acdc6-72ba-4fa5-b930-93ce521dcd7e",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        96,
+        208
+      ],
+      "id": "89f894f7-8412-4026-b335-38e46223d38f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xswwvibhBsvo3BaL",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        192,
+        208
+      ],
+      "id": "637a57ec-83d6-402b-a53b-510c1fd422b7",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "188CzbG6TRehbSk7GtZ09GixB40-Z2m-BM4RMTttcfl4",
+          "mode": "list",
+          "cachedResultName": "TUGAS 2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/188CzbG6TRehbSk7GtZ09GixB40-Z2m-BM4RMTttcfl4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/188CzbG6TRehbSk7GtZ09GixB40-Z2m-BM4RMTttcfl4/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        288,
+        208
+      ],
+      "id": "961c76cc-1984-4674-ae08-e55f52d63dd4",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "44grqRF3WzvAcpeY",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2ad7f998-99f0-4e02-9e92-e4812fa2223a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "nDljhSuLPo3frdju",
+  "tags": []
+}
